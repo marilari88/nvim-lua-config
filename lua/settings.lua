@@ -25,6 +25,7 @@ opt.shiftwidth = 2
 wo.number = true
 wo.relativenumber = true
 
+
 local api = vim.api
 
 -- Highlight on yank
@@ -34,6 +35,12 @@ api.nvim_create_autocmd("TextYankPost", {
   group = yankGrp,
 })
 
-vim.diagnostic.config({
-  severity_sort = true
-})
+vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
+  vim.lsp.handlers.hover,
+  {border = 'rounded'}
+)
+
+vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
+  vim.lsp.handlers.signature_help,
+  {border = 'rounded'}
+)

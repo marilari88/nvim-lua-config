@@ -14,7 +14,7 @@ map('c','jj','<C-C>')
 map('i','<A-k>','<Esc>:m .-2<CR>==gi')
 map('i','<A-j>','<Esc>:m .+1<CR>==gi')
 map('n','<A-k>',':m .-2<CR>==')
-map('n','<A-j>',':k .+1<CR>==')
+map('n','<A-j>',':m .+1<CR>==')
 map('v','<A-k>',':m \'<-2<CR>gv=gv')
 map('v','<A-j>',':m \'>+1<CR>gv=gv')
 
