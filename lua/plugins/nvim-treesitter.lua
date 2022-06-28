@@ -19,6 +19,10 @@ require 'nvim-treesitter.configs'.setup {
       node_decremental = "grm",
     },
   },
+  rainbow={
+    enable = true,
+    extended_mode = true,
+  }
 }
 
 require('Comment').setup {

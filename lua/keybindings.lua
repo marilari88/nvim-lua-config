@@ -33,6 +33,9 @@ map('n','<Leader>q',':q<CR>')
 -- jump to last buffer
 map('n','<Leader><space>','<C-^>')
 
+map('n','<C-p>','<cmd>bprev<CR>')
+map('n','<C-n>','<cmd>bnext<CR>')
+
 -- open terminal
 map('n','<Leader>t',':vsplit +term<CR> i')
 
@@ -53,6 +56,8 @@ map('t','<C-up>','<C-w>5-')
 map('n','Y','y$')
 
 map('n','<Leader>n','<cmd>NvimTreeToggle<CR>')
+
+map('n','<Leader>g','<cmd>Git<CR>')
 
 --vim.keymap.set({'n', 'v'}, '<Leader>ll', vim.lsp.buf.rename, { buffer=true, desc="LSP rename"})
 -- vim.api.nvim_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { noremap = true })

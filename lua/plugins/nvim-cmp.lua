@@ -45,7 +45,6 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'buffer' },
     { name = 'luasnip' },
-    { name = 'look' },
   },
   window = {
     completion = cmp.config.window.bordered(),
@@ -55,17 +54,16 @@ cmp.setup {
     ghost_text = true
   },
   formatting = {
-    format  = function (entry,vim_item)
+    format = function(entry, vim_item)
       vim_item.kind = lspkind.presets.default[vim_item.kind]
       vim_item.menu = ({
         nvim_lsp = "[LSP]",
-        look = "[Dict]",
         buffer = "[Buffer]",
         luasnip = "[Snippet]",
       })[entry.source.name]
 
       vim_item.kind, vim_item.menu = vim_item.kind, vim_item.menu
-        return vim_item
-      end
+      return vim_item
+    end
   }
 }
