@@ -8,6 +8,7 @@ o.hlsearch = true
 o.incsearch = true
 o.ignorecase = false
 o.scrolloff = 12
+o.swapfile = false
 
 opt.splitbelow = true
 opt.splitright = true

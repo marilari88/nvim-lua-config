@@ -1,3 +1,4 @@
+local trouble = require('trouble')
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
@@ -6,7 +7,11 @@ local opts = { noremap = true, silent = true }
 -- vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '[g', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']g', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<Leader>d', vim.diagnostic.setloclist, opts)
+-- vim.keymap.set('n', '<Leader>d', vim.diagnostic.setloclist, opts)
+--
+vim.keymap.set('n', '<Leader>d', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
+-- vim.keymap.set('n', '[g', trouble.next({skip_groups = true, jump = true}), opts)
+-- vim.keymap.set('n', ']g', trouble.previous({skip_groups = true, jump = true}), opts)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
