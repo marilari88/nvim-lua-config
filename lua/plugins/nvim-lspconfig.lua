@@ -23,14 +23,17 @@ local on_attach = function(client, bufnr)
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
 	local bufopts = { noremap = true, silent = true, buffer = bufnr }
 	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
-	vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+	-- vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+	--  vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, bufopts)
+	--  vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
+	vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<CR>", opts)
+	vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<CR>", opts)
+	vim.keymap.set("n", "gr", "<cmd>TroubleToggle lsp_references<CR>", opts)
 	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
+	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
 	vim.keymap.set("n", "<Leader>k", vim.lsp.buf.signature_help, bufopts)
-	vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, bufopts)
 	vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, bufopts)
 	vim.keymap.set("n", "<Leader>a", vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
 	vim.keymap.set("n", "<Leader>f", vim.lsp.buf.formatting, bufopts)
 end
 
