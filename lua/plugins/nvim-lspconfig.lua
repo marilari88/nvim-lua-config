@@ -1,15 +1,15 @@
-local trouble = require('trouble')
+local trouble = require("trouble")
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
 local opts = { noremap = true, silent = true }
 -- vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[g', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']g', vim.diagnostic.goto_next, opts)
+vim.keymap.set("n", "[g", vim.diagnostic.goto_prev, opts)
+vim.keymap.set("n", "]g", vim.diagnostic.goto_next, opts)
 -- vim.keymap.set('n', '<Leader>d', vim.diagnostic.setloclist, opts)
 --
-vim.keymap.set('n', '<Leader>d', '<cmd>TroubleToggle workspace_diagnostics<CR>', opts)
+vim.keymap.set("n", "<Leader>d", "<cmd>TroubleToggle workspace_diagnostics<CR>", opts)
 -- vim.keymap.set('n', '[g', trouble.next({skip_groups = true, jump = true}), opts)
 -- vim.keymap.set('n', ']g', trouble.previous({skip_groups = true, jump = true}), opts)
 
@@ -17,51 +17,54 @@ vim.keymap.set('n', '<Leader>d', '<cmd>TroubleToggle workspace_diagnostics<CR>',
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
 	-- Enable completion triggered by <c-x><c-o>
-	vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
 	-- Mappings.
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
 	local bufopts = { noremap = true, silent = true, buffer = bufnr }
-	vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-	vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-	vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-	vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-	vim.keymap.set('n', '<Leader>k', vim.lsp.buf.signature_help, bufopts)
-	vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, bufopts)
-	vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, bufopts)
-	vim.keymap.set('n', '<Leader>a', vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-	vim.keymap.set('n', '<Leader>f', vim.lsp.buf.formatting, bufopts)
-
+	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
+	vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
+	vim.keymap.set("n", "<Leader>k", vim.lsp.buf.signature_help, bufopts)
+	vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, bufopts)
+	vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, bufopts)
+	vim.keymap.set("n", "<Leader>a", vim.lsp.buf.code_action, bufopts)
+	vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
+	vim.keymap.set("n", "<Leader>f", vim.lsp.buf.formatting, bufopts)
 end
 
-require('lspconfig')['tsserver'].setup {
-	on_attach =  function (client,bufnr)
-    client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.document_range_formatting = false
+require("lspconfig")["tsserver"].setup({
+	on_attach = function(client, bufnr)
+		client.resolved_capabilities.document_formatting = false
+		client.resolved_capabilities.document_range_formatting = false
 
-    -- local ts_utils = require('typescript')
-    -- ts_utils.setup({})
-    -- ts_utils.setup_client(client)
+		-- local ts_utils = require('typescript')
+		-- ts_utils.setup({})
+		-- ts_utils.setup_client(client)
 
-    -- TODO keymap organize imports rename
+		-- TODO keymap organize imports rename
 
-    on_attach(client,bufnr)
+		on_attach(client, bufnr)
 	end,
 	capabilities = capabilities,
-}
+})
 
-require 'lspconfig'.sumneko_lua.setup {
-	on_attach = on_attach,
+require("lspconfig").sumneko_lua.setup({
+	on_attach = function(client, bufnr)
+		client.resolved_capabilities.document_formatting = false
+		client.resolved_capabilities.document_range_formatting = false
+		on_attach(client, bufnr)
+	end,
 	settings = {
 		Lua = {
 			runtime = {
 				-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-				version = 'LuaJIT',
+				version = "LuaJIT",
 			},
 			diagnostics = {
 				-- Get the language server to recognize the `vim` global
-				globals = { 'vim' },
+				globals = { "vim" },
 			},
 			workspace = {
 				-- Make the server aware of Neovim runtime files
@@ -73,22 +76,23 @@ require 'lspconfig'.sumneko_lua.setup {
 			},
 		},
 	},
-}
-
+})
 
 local null_ls = require("null-ls")
 
 null_ls.setup({
-  debug = true,
-  sources = {
-    null_ls.builtins.diagnostics.eslint,
-    null_ls.builtins.code_actions.eslint,
-    null_ls.builtins.formatting.prettier
-  },
-  on_attach = function (client,bufnr)
-  if client.resolved_capabilities.document_formatting then
-    vim.cmd("autocmd BufWritePre  <buffer> lua vim.lsp.buf.formatting_sync()")
-  end
-  on_attach(client,bufnr)
-end
+	debug = true,
+	sources = {
+		null_ls.builtins.diagnostics.eslint,
+		null_ls.builtins.code_actions.eslint,
+		null_ls.builtins.code_actions.gitsigns,
+		null_ls.builtins.formatting.prettier,
+		null_ls.builtins.formatting.stylua,
+	},
+	on_attach = function(client, bufnr)
+		if client.resolved_capabilities.document_formatting then
+			vim.cmd("autocmd BufWritePre  <buffer> lua vim.lsp.buf.formatting_sync()")
+		end
+		on_attach(client, bufnr)
+	end,
 })
