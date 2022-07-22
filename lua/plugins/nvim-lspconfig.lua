@@ -1,4 +1,12 @@
-local trouble = require("trouble")
+local function organize_imports()
+	local params = {
+		command = "_typescript.organizeImports",
+		arguments = { vim.api.nvim_buf_get_name(0) },
+		title = "",
+	}
+	vim.lsp.buf.execute_command(params)
+end
+
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
@@ -23,11 +31,11 @@ local on_attach = function(client, bufnr)
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
 	local bufopts = { noremap = true, silent = true, buffer = bufnr }
 	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
-	-- vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-	--  vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, bufopts)
+	vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+	vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, bufopts)
 	--  vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
-	vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<CR>", opts)
-	vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<CR>", opts)
+	-- vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<CR>", opts)
+	-- vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<CR>", opts)
 	vim.keymap.set("n", "gr", "<cmd>TroubleToggle lsp_references<CR>", opts)
 	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
@@ -38,15 +46,23 @@ local on_attach = function(client, bufnr)
 end
 
 require("lspconfig")["tsserver"].setup({
+	commands = {
+		OrganizeImports = {
+			organize_imports,
+			description = "Organize Imports",
+		},
+	},
 	on_attach = function(client, bufnr)
 		client.resolved_capabilities.document_formatting = false
 		client.resolved_capabilities.document_range_formatting = false
 
-		-- local ts_utils = require('typescript')
+		-- local ts_utils = require("nvim-lsp-ts-utils")
 		-- ts_utils.setup({})
 		-- ts_utils.setup_client(client)
 
-		-- TODO keymap organize imports rename
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "go", ":OrganizeImports<CR>", opts)
+		-- vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", ":TSLspRenameFile<CR>", opts)
+		-- vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", opts)
 
 		on_attach(client, bufnr)
 	end,
@@ -86,9 +102,9 @@ local null_ls = require("null-ls")
 null_ls.setup({
 	debug = true,
 	sources = {
+		null_ls.builtins.code_actions.gitsigns,
 		null_ls.builtins.diagnostics.eslint,
 		null_ls.builtins.code_actions.eslint,
-		null_ls.builtins.code_actions.gitsigns,
 		null_ls.builtins.formatting.prettier,
 		null_ls.builtins.formatting.stylua,
 	},
