@@ -149,4 +149,11 @@ return require("packer").startup(function()
 			require("marks").setup({})
 		end,
 	})
+
+	use({
+		"ThePrimeagen/git-worktree.nvim",
+		config = function()
+			require("plugins.git-worktree")
+		end,
+	})
 end)
