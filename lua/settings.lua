@@ -28,6 +28,17 @@ wo.relativenumber = true
 
 local api = vim.api
 
+-- Set scrolloff in terminal
+local terminalGroup = api.nvim_create_augroup("TerminalScrollOff", { clear = true })
+api.nvim_create_autocmd("TermEnter", {
+	command = "silent! set local scrolloff 15",
+	group = terminalGroup,
+})
+api.nvim_create_autocmd("TermLeave", {
+	command = "silent! set local scrolloff 0",
+	group = terminalGroup,
+})
+
 -- Highlight on yank
 local yankGrp = api.nvim_create_augroup("YankHighlight", { clear = true })
 api.nvim_create_autocmd("TextYankPost", {

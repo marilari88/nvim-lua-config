@@ -122,6 +122,7 @@ return require("packer").startup(function()
 			"nvim-treesitter/nvim-treesitter",
 			"antoinemadec/FixCursorHold.nvim",
 			"haydenmeade/neotest-jest",
+			"nvim-neotest/neotest-plenary",
 		},
 		config = function()
 			require("plugins.neotest")
@@ -137,13 +138,6 @@ return require("packer").startup(function()
 	})
 
 	use({
-		"simrat39/symbols-outline.nvim",
-		config = function()
-			require("symbols-outline").setup({})
-		end,
-	})
-
-	use({
 		"chentoast/marks.nvim",
 		config = function()
 			require("marks").setup({})
@@ -154,6 +148,31 @@ return require("packer").startup(function()
 		"ThePrimeagen/git-worktree.nvim",
 		config = function()
 			require("plugins.git-worktree")
+		end,
+	})
+
+	use({
+		"karb94/neoscroll.nvim",
+		config = function()
+			require("neoscroll").setup()
+		end,
+	})
+
+	use({
+		"stevearc/aerial.nvim",
+		config = function()
+			require("aerial").setup({
+				on_attach = function(bufnr)
+					-- Toggle the aerial window with <leader>a
+					vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>s", "<cmd>AerialToggle!<CR>", {})
+					-- Jump forwards/backwards with '{' and '}'
+					vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>[", "<cmd>AerialPrev<CR>", {})
+					vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>]", "<cmd>AerialNext<CR>", {})
+					-- Jump up the tree with '[[' or ']]'
+					vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
+					vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
+				end,
+			})
 		end,
 	})
 end)

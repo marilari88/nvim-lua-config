@@ -67,8 +67,6 @@ map("n", "<Leader>jf", "<cmd>NeotestFile<CR>")
 map("n", "<Leader>jp", "<cmd>Neotest<CR>")
 map("n", "<Leader>ja", "<cmd>NeotestAttach<CR>")
 
-map("n", "<leader>s", "<cmd>SymbolsOutline<cr>")
-
 map("n", "<leader>m", "<cmd>MarksListAll<cr>")
 
 return map
