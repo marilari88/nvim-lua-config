@@ -8,7 +8,7 @@ vim.g.tokyonight_colors = { hint = "orange", error = "#ff0000" }
 -- gruvbox
 vim.g.gruvbox_italic = 1
 
-vim.cmd([[colorscheme gruvbox]])
+vim.cmd([[colorscheme tokyonight-night]])
 -- vim.cmd([[colorscheme everforest]])
 -- vim.cmd[[colorscheme tokyonight]]
 -- vim.cmd[[colorscheme dracula]]

@@ -42,7 +42,7 @@ local config2 = {
 	},
 	sections = {
 		lualine_a = { "mode" },
-		lualine_b = { "filename", "aerial" },
+		lualine_b = { "filename" },
 		lualine_c = {
 			"branch",
 			"diff",

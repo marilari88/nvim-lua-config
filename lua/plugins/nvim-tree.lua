@@ -9,8 +9,6 @@ require("nvim-tree").setup({
 		adaptive_size = true,
 		mappings = {
 			list = {
-				{ key = "v", action = "vsplit" },
-				{ key = "s", action = "split" },
 				{ key = "l", action = "edit_no_picker" },
 			},
 		},

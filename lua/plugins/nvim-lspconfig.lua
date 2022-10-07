@@ -42,7 +42,7 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set("n", "<Leader>k", vim.lsp.buf.signature_help, bufopts)
 	vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, bufopts)
 	vim.keymap.set("n", "<Leader>a", vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set("n", "<Leader>f", vim.lsp.buf.formatting, bufopts)
+	vim.keymap.set("n", "<Leader>f", vim.lsp.buf.format, bufopts)
 end
 
 require("lspconfig")["tsserver"].setup({
@@ -53,8 +53,8 @@ require("lspconfig")["tsserver"].setup({
 		},
 	},
 	on_attach = function(client, bufnr)
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
+		client.server_capabilities.documentFormattingProvider = false
+		client.server_capabilities.documentRangeFormattingProvider = false
 
 		-- local ts_utils = require("nvim-lsp-ts-utils")
 		-- ts_utils.setup({})
@@ -71,8 +71,8 @@ require("lspconfig")["tsserver"].setup({
 
 require("lspconfig").sumneko_lua.setup({
 	on_attach = function(client, bufnr)
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
+		client.server_capabilities.documentFormattingProvider = false
+		client.server_capabilities.documentRangeFormattingProvider = false
 		on_attach(client, bufnr)
 	end,
 	settings = {
@@ -109,8 +109,8 @@ null_ls.setup({
 		null_ls.builtins.formatting.stylua,
 	},
 	on_attach = function(client, bufnr)
-		if client.resolved_capabilities.document_formatting then
-			vim.cmd("autocmd BufWritePre  <buffer> lua vim.lsp.buf.formatting_sync()")
+		if client.server_capabilities.documentFormattingProvider then
+			vim.cmd("autocmd BufWritePre  <buffer> lua vim.lsp.buf.format()")
 		end
 		on_attach(client, bufnr)
 	end,

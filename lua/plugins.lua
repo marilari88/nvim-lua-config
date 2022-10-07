@@ -31,6 +31,8 @@ return require("packer").startup(function()
 
 	use("p00f/nvim-ts-rainbow")
 
+	use("rcarriga/nvim-notify")
+
 	use({
 		"windwp/nvim-ts-autotag",
 		config = function()
@@ -45,6 +47,8 @@ return require("packer").startup(function()
 		end,
 		run = ":TSUpdate",
 	})
+	use("nvim-treesitter/nvim-treesitter-context")
+	use("nvim-treesitter/playground")
 
 	-- null-ls to handle eslint and prettier
 	use("jose-elias-alvarez/null-ls.nvim")
@@ -122,6 +126,7 @@ return require("packer").startup(function()
 			"nvim-treesitter/nvim-treesitter",
 			"antoinemadec/FixCursorHold.nvim",
 			"haydenmeade/neotest-jest",
+			"marilari88/neotest-vitest",
 			"nvim-neotest/neotest-plenary",
 		},
 		config = function()
