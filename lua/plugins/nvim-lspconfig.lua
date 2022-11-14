@@ -56,18 +56,14 @@ require("lspconfig")["tsserver"].setup({
 		client.server_capabilities.documentFormattingProvider = false
 		client.server_capabilities.documentRangeFormattingProvider = false
 
-		-- local ts_utils = require("nvim-lsp-ts-utils")
-		-- ts_utils.setup({})
-		-- ts_utils.setup_client(client)
-
 		vim.api.nvim_buf_set_keymap(bufnr, "n", "go", ":OrganizeImports<CR>", opts)
-		-- vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", ":TSLspRenameFile<CR>", opts)
-		-- vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", opts)
 
 		on_attach(client, bufnr)
 	end,
 	capabilities = capabilities,
 })
+
+require("lspconfig").tailwindcss.setup({})
 
 require("lspconfig").sumneko_lua.setup({
 	on_attach = function(client, bufnr)
@@ -110,7 +106,7 @@ null_ls.setup({
 	},
 	on_attach = function(client, bufnr)
 		if client.server_capabilities.documentFormattingProvider then
-			vim.cmd("autocmd BufWritePre  <buffer> lua vim.lsp.buf.format()")
+			vim.cmd("autocmd BufWritePre  <buffer> lua vim.lsp.buf.format({timeout_ms = 5000})")
 		end
 		on_attach(client, bufnr)
 	end,
