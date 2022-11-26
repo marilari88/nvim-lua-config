@@ -2,13 +2,14 @@ return require("packer").startup(function()
 	-- Packer can manage itself
 	--
 	use("wbthomason/packer.nvim")
+
 	use({
-		"williamboman/nvim-lsp-installer",
+		"williamboman/mason.nvim",
 		config = function()
-			require("plugins/nvim-lsp-installer")
+			require("plugins/mason")
 		end,
 	})
-	-- use("jose-elias-alvarez/nvim-lsp-ts-utils")
+
 	use({
 		"neovim/nvim-lspconfig",
 		config = function()
@@ -27,6 +28,8 @@ return require("packer").startup(function()
 	use("saadparwaiz1/cmp_luasnip")
 	use("L3MON4D3/LuaSnip")
 	use("hrsh7th/cmp-buffer")
+	use("hrsh7th/cmp-path")
+	use("hrsh7th/cmp-cmdline")
 	use("hrsh7th/cmp-nvim-lsp-signature-help")
 	use("onsails/lspkind-nvim")
 
@@ -169,16 +172,41 @@ return require("packer").startup(function()
 		config = function()
 			require("aerial").setup({
 				on_attach = function(bufnr)
-					-- Toggle the aerial window with <leader>a
 					vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>s", "<cmd>AerialToggle!<CR>", {})
-					-- Jump forwards/backwards with '{' and '}'
 					vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>[", "<cmd>AerialPrev<CR>", {})
 					vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>]", "<cmd>AerialNext<CR>", {})
-					-- Jump up the tree with '[[' or ']]'
 					vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
 					vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
 				end,
 			})
+		end,
+	})
+
+	use({
+		"rmagatti/auto-session",
+		config = function()
+			--[[ vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions" ]]
+			vim.o.sessionoptions = "curdir,folds,tabpages,winsize,winpos,terminal"
+			require("auto-session").setup({
+				log_level = "error",
+			})
+		end,
+	})
+
+	use({
+		"rmagatti/session-lens",
+		requires = { "rmagatti/auto-session", "nvim-telescope/telescope.nvim" },
+		config = function()
+			require("session-lens").setup({
+				prompt_title = "Sessions",
+			})
+		end,
+	})
+
+	use({
+		"Pocco81/true-zen.nvim",
+		config = function()
+			require("true-zen").setup({})
 		end,
 	})
 end)

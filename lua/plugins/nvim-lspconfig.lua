@@ -42,6 +42,7 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set("n", "<Leader>k", vim.lsp.buf.signature_help, bufopts)
 	vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, bufopts)
 	vim.keymap.set("n", "<Leader>a", vim.lsp.buf.code_action, bufopts)
+	vim.keymap.set("v", "<Leader>a", vim.lsp.buf.code_action, bufopts)
 	vim.keymap.set("n", "<Leader>f", vim.lsp.buf.format, bufopts)
 end
 
@@ -56,7 +57,9 @@ require("lspconfig")["tsserver"].setup({
 		client.server_capabilities.documentFormattingProvider = false
 		client.server_capabilities.documentRangeFormattingProvider = false
 
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "go", ":OrganizeImports<CR>", opts)
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "<Leader>;", ":OrganizeImports<CR>", opts)
+
+		require("twoslash-queries").attach(client, bufnr)
 
 		on_attach(client, bufnr)
 	end,
