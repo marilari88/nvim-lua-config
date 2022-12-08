@@ -10,6 +10,8 @@ return require("packer").startup(function()
 		end,
 	})
 
+  use("marilari88/twoslash-queries.nvim")
+
 	use({
 		"neovim/nvim-lspconfig",
 		config = function()

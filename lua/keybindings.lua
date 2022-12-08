@@ -8,6 +8,8 @@ local function map(mode, lhs, rhs, opts)
 	vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
+vim.api.nvim_set_keymap('n',"<C-k>","<cmd>InspectTwoslashQueries<CR>",{})
+
 -- map esc
 map("i", "jj", "<Esc>")
 map("c", "jj", "<C-C>")
