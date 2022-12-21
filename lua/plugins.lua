@@ -211,4 +211,7 @@ return require("packer").startup(function()
 			require("true-zen").setup({})
 		end,
 	})
+
+  use({'stevearc/dressing.nvim'})
+
 end)
