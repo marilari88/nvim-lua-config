@@ -66,7 +66,16 @@ require("lspconfig")["tsserver"].setup({
 	capabilities = capabilities,
 })
 
-require("lspconfig").tailwindcss.setup({})
+require("lspconfig").tailwindcss.setup({
+	settings = {
+		["tailwindCSS"] = { experimental = { classRegex = { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" } } },
+	},
+})
+
+--[[ require("lspconfig").emmet_ls.setup({ ]]
+--[[ 	capabilities = capabilities, ]]
+--[[ 	filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" }, ]]
+--[[ }) ]]
 
 require("lspconfig").sumneko_lua.setup({
 	on_attach = function(client, bufnr)

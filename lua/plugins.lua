@@ -83,6 +83,16 @@ return require("packer").startup(function()
 		end,
 	})
 
+	use({
+		"marilari88/twoslash-queries.nvim",
+		config = function()
+			require("twoslash-queries").setup({
+				multi_line = true, -- print types in multi line mode
+				is_enabled = true, -- keep disabled at startup and enable it on request with the EnableTwoslashQueries command
+			})
+		end,
+	})
+
 	-- comments
 	use({
 		"numToStr/Comment.nvim",
