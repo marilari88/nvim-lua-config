@@ -8,7 +8,7 @@ local function map(mode, lhs, rhs, opts)
 	vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
-vim.api.nvim_set_keymap('n',"<C-k>","<cmd>InspectTwoslashQueries<CR>",{})
+vim.api.nvim_set_keymap("n", "<C-k>", "<cmd>InspectTwoslashQueries<CR>", {})
 
 -- map esc
 map("i", "jj", "<Esc>")
@@ -19,8 +19,8 @@ map("i", "<A-k>", "<Esc>:m .-2<CR>==gi")
 map("i", "<A-j>", "<Esc>:m .+1<CR>==gi")
 map("n", "<A-k>", ":m .-2<CR>==")
 map("n", "<A-j>", ":m .+1<CR>==")
-map("v", "<A-k>", ":m '<-2<CR>gv=gv")
-map("v", "<A-j>", ":m '>+1<CR>gv=gv")
+map("v", "<C-k>", ":m '<-2<CR>gv=gv")
+map("v", "<C-j>", ":m '>+1<CR>gv=gv")
 
 -- move between panes
 map("n", "<C-h>", "<C-w>h")
