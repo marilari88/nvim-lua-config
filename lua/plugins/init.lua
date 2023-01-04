@@ -24,13 +24,6 @@ return {
 			})
 		end,
 	},
-	{
-		"numToStr/Comment.nvim",
-		config = function()
-			require("Comment").setup()
-		end,
-	},
-	"JoosepAlviste/nvim-ts-context-commentstring",
 	"tpope/vim-fugitive",
 	{
 		"kylechui/nvim-surround",
@@ -39,10 +32,6 @@ return {
 		end,
 	},
 	{ "kyazdani42/nvim-web-devicons", lazy = true },
-	"antoinemadec/FixCursorHold.nvim",
-	"haydenmeade/neotest-jest",
-	"marilari88/neotest-vitest",
-	"nvim-neotest/neotest-plenary",
 	{
 		"folke/trouble.nvim",
 		config = function()

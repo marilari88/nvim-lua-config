@@ -1,10 +1,13 @@
 return {
 	"nvim-neotest/neotest",
+	dependencies = {
+		"antoinemadec/FixCursorHold.nvim",
+		"haydenmeade/neotest-jest",
+		"marilari88/neotest-vitest",
+		"nvim-neotest/neotest-plenary",
+	},
 	config = function()
 		require("neotest").setup({
-			output = {
-				open_on_run = "short",
-			},
 			adapters = {
 				require("neotest-jest"),
 				require("neotest-vitest"),
