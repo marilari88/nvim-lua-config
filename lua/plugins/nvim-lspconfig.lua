@@ -78,6 +78,8 @@ return {
 			},
 		})
 
+		require("lspconfig").prismals.setup({})
+
 		--[[ require("lspconfig").emmet_ls.setup({ ]]
 		--[[ 	capabilities = capabilities, ]]
 		--[[ 	filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" }, ]]
@@ -117,9 +119,11 @@ return {
 			debug = true,
 			sources = {
 				null_ls.builtins.code_actions.gitsigns,
-				null_ls.builtins.diagnostics.eslint,
-				null_ls.builtins.code_actions.eslint,
-				null_ls.builtins.formatting.prettier,
+				null_ls.builtins.diagnostics.eslint_d.with({
+					only_local = true,
+				}),
+				null_ls.builtins.code_actions.eslint_d,
+				null_ls.builtins.formatting.prettierd,
 				null_ls.builtins.formatting.stylua,
 			},
 			on_attach = function(client, bufnr)
