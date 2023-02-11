@@ -8,7 +8,7 @@ local function map(mode, lhs, rhs, opts)
 	vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
-vim.api.nvim_set_keymap('n',"<C-k>","<cmd>InspectTwoslashQueries<CR>",{})
+vim.api.nvim_set_keymap("n", "<C-k>", "<cmd>InspectTwoslashQueries<CR>", {})
 
 -- map esc
 map("i", "jj", "<Esc>")
@@ -19,8 +19,8 @@ map("i", "<A-k>", "<Esc>:m .-2<CR>==gi")
 map("i", "<A-j>", "<Esc>:m .+1<CR>==gi")
 map("n", "<A-k>", ":m .-2<CR>==")
 map("n", "<A-j>", ":m .+1<CR>==")
-map("v", "<A-k>", ":m '<-2<CR>gv=gv")
-map("v", "<A-j>", ":m '>+1<CR>gv=gv")
+map("v", "<C-k>", ":m '<-2<CR>gv=gv")
+map("v", "<C-j>", ":m '>+1<CR>gv=gv")
 
 -- move between panes
 map("n", "<C-h>", "<C-w>h")
@@ -39,9 +39,6 @@ map("n", "<Leader><space>", "<C-^>")
 
 map("n", "<C-p>", "<cmd>bprev<CR>")
 map("n", "<C-n>", "<cmd>bnext<CR>")
-
--- open terminal
-map("n", "<Leader>t", ":vsplit +term<CR> i")
 
 -- terminal mappings
 map("t", "jj", "<C-\\><C-n>")
@@ -63,12 +60,16 @@ map("n", "<Leader>n", "<cmd>NvimTreeToggle<CR>")
 
 map("n", "<Leader>g", "<cmd>Git<CR>")
 
-map("n", "<Leader>jn", "<cmd>NeotestSummary<CR>")
-map("n", "<Leader>jt", "<cmd>NeotestNearest<CR>")
-map("n", "<Leader>jf", "<cmd>NeotestFile<CR>")
-map("n", "<Leader>jp", "<cmd>Neotest<CR>")
-map("n", "<Leader>ja", "<cmd>NeotestAttach<CR>")
+map("n", "<Leader>t", "<cmd>NeotestSummary<CR>")
+map("n", "<Leader>tt", "<cmd>NeotestNearest<CR>")
+map("n", "<Leader>tf", "<cmd>NeotestFile<CR>")
+--[[ map("n", "<Leader>tp", "<cmd>Neotest<CR>") ]]
+map("n", "<Leader>ta", "<cmd>NeotestAttach<CR>")
 
-map("n", "<leader>m", "<cmd>MarksListAll<cr>")
+map("n", "<leader>'", "<cmd>MarksListAll<cr>")
+
+map("n", "<leader>m", "<cmd>MindOpenProject global<cr>")
+
+map("n", "<leader>\\", "<cmd>0ToggleTerm direction=float<cr>")
 
 return map

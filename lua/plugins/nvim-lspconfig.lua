@@ -7,10 +7,6 @@ local function organize_imports()
 	vim.lsp.buf.execute_command(params)
 end
 
--- Add additional capabilities supported by nvim-cmp
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-
 local opts = { noremap = true, silent = true }
 -- vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float, opts)
 vim.keymap.set("n", "[g", vim.diagnostic.goto_prev, opts)
@@ -46,80 +42,96 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set("n", "<Leader>f", vim.lsp.buf.format, bufopts)
 end
 
-require("lspconfig")["tsserver"].setup({
-	commands = {
-		OrganizeImports = {
-			organize_imports,
-			description = "Organize Imports",
-		},
-	},
-	on_attach = function(client, bufnr)
-		client.server_capabilities.documentFormattingProvider = false
-		client.server_capabilities.documentRangeFormattingProvider = false
+return {
+	"neovim/nvim-lspconfig",
+	event = "BufReadPre",
+	config = function()
+		-- Add additional capabilities supported by nvim-cmp
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
-		vim.api.nvim_buf_set_keymap(bufnr, "n", "<Leader>;", ":OrganizeImports<CR>", opts)
+		require("lspconfig").tsserver.setup({
+			commands = {
+				OrganizeImports = {
+					organize_imports,
+					description = "Organize Imports",
+				},
+			},
+			on_attach = function(client, bufnr)
+				client.server_capabilities.documentFormattingProvider = false
+				client.server_capabilities.documentRangeFormattingProvider = false
 
-		require("twoslash-queries").attach(client, bufnr)
+				vim.api.nvim_buf_set_keymap(bufnr, "n", "<Leader>;", ":OrganizeImports<CR>", opts)
 
-		on_attach(client, bufnr)
+				require("twoslash-queries").attach(client, bufnr)
+
+				on_attach(client, bufnr)
+			end,
+			capabilities = capabilities,
+		})
+
+		require("lspconfig").tailwindcss.setup({
+			settings = {
+				["tailwindCSS"] = {
+					experimental = { classRegex = { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" } },
+				},
+			},
+		})
+
+		require("lspconfig").prismals.setup({})
+
+		--[[ require("lspconfig").emmet_ls.setup({ ]]
+		--[[ 	capabilities = capabilities, ]]
+		--[[ 	filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" }, ]]
+		--[[ }) ]]
+
+		require("lspconfig").sumneko_lua.setup({
+			on_attach = function(client, bufnr)
+				client.server_capabilities.documentFormattingProvider = false
+				client.server_capabilities.documentRangeFormattingProvider = false
+				on_attach(client, bufnr)
+			end,
+			settings = {
+				Lua = {
+					runtime = {
+						-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+						version = "LuaJIT",
+					},
+					diagnostics = {
+						-- Get the language server to recognize the `vim` global
+						globals = { "vim" },
+					},
+					workspace = {
+						-- Make the server aware of Neovim runtime files
+						library = vim.api.nvim_get_runtime_file("", true),
+					},
+					-- Do not send telemetry data containing a randomized but unique identifier
+					telemetry = {
+						enable = false,
+					},
+				},
+			},
+		})
+
+		local null_ls = require("null-ls")
+
+		null_ls.setup({
+			debug = true,
+			sources = {
+				null_ls.builtins.code_actions.gitsigns,
+				null_ls.builtins.diagnostics.eslint_d.with({
+					only_local = true,
+				}),
+				null_ls.builtins.code_actions.eslint_d,
+				null_ls.builtins.formatting.prettierd,
+				null_ls.builtins.formatting.stylua,
+			},
+			on_attach = function(client, bufnr)
+				if client.server_capabilities.documentFormattingProvider then
+					vim.cmd("autocmd BufWritePre  <buffer> lua vim.lsp.buf.format({timeout_ms = 5000})")
+				end
+				on_attach(client, bufnr)
+			end,
+		})
 	end,
-	capabilities = capabilities,
-})
-
-require("lspconfig").tailwindcss.setup({
-	settings = {
-		["tailwindCSS"] = { experimental = { classRegex = { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" } } },
-	},
-})
-
---[[ require("lspconfig").emmet_ls.setup({ ]]
---[[ 	capabilities = capabilities, ]]
---[[ 	filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" }, ]]
---[[ }) ]]
-
-require("lspconfig").sumneko_lua.setup({
-	on_attach = function(client, bufnr)
-		client.server_capabilities.documentFormattingProvider = false
-		client.server_capabilities.documentRangeFormattingProvider = false
-		on_attach(client, bufnr)
-	end,
-	settings = {
-		Lua = {
-			runtime = {
-				-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-				version = "LuaJIT",
-			},
-			diagnostics = {
-				-- Get the language server to recognize the `vim` global
-				globals = { "vim" },
-			},
-			workspace = {
-				-- Make the server aware of Neovim runtime files
-				library = vim.api.nvim_get_runtime_file("", true),
-			},
-			-- Do not send telemetry data containing a randomized but unique identifier
-			telemetry = {
-				enable = false,
-			},
-		},
-	},
-})
-
-local null_ls = require("null-ls")
-
-null_ls.setup({
-	debug = true,
-	sources = {
-		null_ls.builtins.code_actions.gitsigns,
-		null_ls.builtins.diagnostics.eslint,
-		null_ls.builtins.code_actions.eslint,
-		null_ls.builtins.formatting.prettier,
-		null_ls.builtins.formatting.stylua,
-	},
-	on_attach = function(client, bufnr)
-		if client.server_capabilities.documentFormattingProvider then
-			vim.cmd("autocmd BufWritePre  <buffer> lua vim.lsp.buf.format({timeout_ms = 5000})")
-		end
-		on_attach(client, bufnr)
-	end,
-})
+}
