@@ -85,7 +85,7 @@ return {
 		--[[ 	filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" }, ]]
 		--[[ }) ]]
 
-		require("lspconfig").sumneko_lua.setup({
+		require("lspconfig").lua_ls.setup({
 			on_attach = function(client, bufnr)
 				client.server_capabilities.documentFormattingProvider = false
 				client.server_capabilities.documentRangeFormattingProvider = false
