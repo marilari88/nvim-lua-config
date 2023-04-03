@@ -58,8 +58,10 @@ return {
 				},
 			},
 			on_attach = function(client, bufnr)
-				client.server_capabilities.documentFormattingProvider = false
-				client.server_capabilities.documentRangeFormattingProvider = false
+				--[[ client.server_capabilities.documentFormattingProvider = true
+				client.server_capabilities.documentRangeFormattingProvider = true ]]
+
+				require("nvim-navbuddy").attach(client, bufnr)
 
 				vim.api.nvim_buf_set_keymap(bufnr, "n", "<Leader>;", ":OrganizeImports<CR>", opts)
 
@@ -128,7 +130,7 @@ return {
 			},
 			on_attach = function(client, bufnr)
 				if client.server_capabilities.documentFormattingProvider then
-					vim.cmd("autocmd BufWritePre  <buffer> lua vim.lsp.buf.format({timeout_ms = 5000})")
+					vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format({timeout_ms = 5000})")
 				end
 				on_attach(client, bufnr)
 			end,
