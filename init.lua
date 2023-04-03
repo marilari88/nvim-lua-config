@@ -22,3 +22,4 @@ require("lazy").setup("plugins", {
 })
 require("color")
 require("diagnostic")
+require("scripts")

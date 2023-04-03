@@ -13,6 +13,7 @@ return {
 				require("neotest-vitest"),
 				require("neotest-plenary"),
 			},
+			quickfix = { open = false },
 		})
 
 		vim.cmd([[

@@ -1,7 +1,7 @@
 return {
 	"nvim-lua/plenary.nvim",
 	"L3MON4D3/LuaSnip",
-	"p00f/nvim-ts-rainbow",
+	"HiPhish/nvim-ts-rainbow2",
 	"rcarriga/nvim-notify",
 	{
 		"windwp/nvim-ts-autotag",
@@ -52,20 +52,6 @@ return {
 		end,
 	},
 	{
-		"stevearc/aerial.nvim",
-		config = function()
-			require("aerial").setup({
-				on_attach = function(bufnr)
-					vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>s", "<cmd>AerialToggle!<CR>", {})
-					vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>[", "<cmd>AerialPrev<CR>", {})
-					vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>]", "<cmd>AerialNext<CR>", {})
-					vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", "<cmd>AerialPrevUp<CR>", {})
-					vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", "<cmd>AerialNextUp<CR>", {})
-				end,
-			})
-		end,
-	},
-	{
 		"rmagatti/auto-session",
 		config = function()
 			vim.o.sessionoptions = "curdir,folds,tabpages,winsize,winpos,terminal"
@@ -89,4 +75,5 @@ return {
 		end,
 	},
 	"stevearc/dressing.nvim",
+	"mg979/vim-visual-multi",
 }
