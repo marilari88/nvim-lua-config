@@ -4,6 +4,12 @@ return {
 	"HiPhish/nvim-ts-rainbow2",
 	"rcarriga/nvim-notify",
 	{
+		"norcalli/nvim-colorizer.lua",
+		config = function()
+			require("colorizer").setup()
+		end,
+	},
+	{
 		"windwp/nvim-ts-autotag",
 		config = function()
 			require("nvim-ts-autotag").setup()
