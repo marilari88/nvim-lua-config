@@ -17,7 +17,7 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup("plugins", {
 	dev = {
 		path = "~/Progetti",
-		patterns = { "neotest-jest", "neotest-vitest" },
+		--[[ patterns = { "neotest-jest", "neotest-vitest" }, ]]
 	},
 })
 require("color")

@@ -58,8 +58,8 @@ return {
 				},
 			},
 			on_attach = function(client, bufnr)
-				--[[ client.server_capabilities.documentFormattingProvider = true
-				client.server_capabilities.documentRangeFormattingProvider = true ]]
+				client.server_capabilities.documentFormattingProvider = false
+				client.server_capabilities.documentRangeFormattingProvider = false
 
 				require("nvim-navbuddy").attach(client, bufnr)
 
@@ -80,7 +80,9 @@ return {
 			},
 		})
 
+		require("lspconfig").cssls.setup({})
 		require("lspconfig").prismals.setup({})
+		require("lspconfig").astro.setup({})
 
 		--[[ require("lspconfig").emmet_ls.setup({ ]]
 		--[[ 	capabilities = capabilities, ]]

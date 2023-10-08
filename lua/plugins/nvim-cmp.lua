@@ -54,10 +54,10 @@ function M.config()
 			end, { "i", "s" }),
 		}),
 		sources = {
-			{ name = "nvim_lsp" },
-			{ name = "nvim_lsp_signature_help" },
-			{ name = "buffer" },
-			{ name = "luasnip" },
+			{ name = "copilot", group_index = 2 },
+			{ name = "nvim_lsp", group_index = 2 },
+			{ name = "nvim_lsp_signature_help", group_index = 2 },
+			{ name = "buffer", group_index = 2 },
 		},
 		window = {
 			completion = cmp.config.window.bordered(),
@@ -70,13 +70,24 @@ function M.config()
 		experimental = {
 			ghost_text = true,
 		},
+		sorting = {
+			priority_weight = 2,
+			comparators = {
+				require("copilot_cmp.comparators").prioritize,
+			},
+		},
 		formatting = {
 			fields = { "kind", "abbr", "menu" },
 			format = function(entry, vim_item)
-				local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
-				local strings = vim.split(kind.kind, "%s", { trimempty = true })
-				kind.kind = " " .. strings[1] .. " "
-				kind.menu = "    (" .. strings[2] .. ")"
+				local kind = require("lspkind").cmp_format({
+					mode = "symbol",
+					maxwidth = 50,
+					symbol_map = { Copilot = "" },
+				})(entry, vim_item)
+				--[[     print() ]]
+				--[[ local strings = vim.split(kind.kind, "%s", { trimempty = true }) ]]
+				--[[ kind.kind = " " .. strings[1] .. " " ]]
+				--[[ kind.menu = "    (" .. strings[2] .. ")" ]]
 
 				return kind
 			end,
@@ -94,7 +105,6 @@ function M.config()
 		-- 		vim_item.menu = ({
 		-- 			nvim_lsp = "[LSP]",
 		-- 			buffer = "[Buffer]",
-		-- 			luasnip = "[Snippet]",
 		-- 		})[entry.source.name]
 		--
 		-- 		vim_item.kind, vim_item.menu = vim_item.kind, vim_item.menu

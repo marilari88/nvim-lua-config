@@ -82,4 +82,5 @@ return {
 	},
 	"stevearc/dressing.nvim",
 	"mg979/vim-visual-multi",
+	"christoomey/vim-tmux-navigator",
 }
