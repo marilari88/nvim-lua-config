@@ -55,8 +55,8 @@ function M.config()
 		}),
 		sources = {
 			{ name = "copilot", group_index = 2 },
-			{ name = "nvim_lsp", group_index = 2 },
 			{ name = "nvim_lsp_signature_help", group_index = 2 },
+			{ name = "nvim_lsp", group_index = 2 },
 			{ name = "buffer", group_index = 2 },
 		},
 		window = {
