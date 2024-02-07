@@ -14,7 +14,7 @@ vim.keymap.set(
 ) ]]
 vim.g.VM_maps = {
 	["Switch Mode"] = "<tab>",
-	["Find Under"] = "<c-n>",
+	["Find Under"] = "<c-k>",
 	["Skip Region"] = "<c-s>",
 	["Remove Region"] = "<c-p>",
 	["Add Cursor Up"] = "<C-S-up>",
