@@ -60,12 +60,6 @@ map("n", "<Leader>n", "<cmd>NvimTreeToggle<CR>")
 
 map("n", "<Leader>g", "<cmd>Git<CR>")
 
-map("n", "<Leader>t", "<cmd>NeotestSummary<CR>")
-map("n", "<Leader>tt", "<cmd>NeotestNearest<CR>")
-map("n", "<Leader>tf", "<cmd>NeotestFile<CR>")
---[[ map("n", "<Leader>tp", "<cmd>Neotest<CR>") ]]
-map("n", "<Leader>ta", "<cmd>NeotestAttach<CR>")
-
 map("n", "<leader>m", "<cmd>MarksListAll<cr>")
 
 map("n", "<leader>\\", "<cmd>0ToggleTerm direction=float<cr>")

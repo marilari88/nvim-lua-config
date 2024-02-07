@@ -6,19 +6,23 @@ return {
 		"nvim-treesitter/nvim-treesitter-context",
 		"nvim-treesitter/playground",
 		"HiPhish/rainbow-delimiters.nvim",
+		"nvim-treesitter/nvim-treesitter-textobjects",
 	},
 	config = function()
-		require("ts_context_commentstring.internal").update_commentstring({
-			key = "__multiline",
+		require("ts_context_commentstring").setup({
+			enable_autocmd = false,
+			languages = {
+				typescript = { __default = "// %s", __multiline = "/* %s */" },
+			},
 		})
+		vim.g.skip_ts_context_commentstring_module = true
 
 		require("nvim-treesitter.configs").setup({
 			ensure_installed = { "lua", "typescript", "javascript", "tsx", "json", "http" },
-			context_commentstring = {
-				enable = true,
-				enable_autocmd = false,
-			},
 			highlight = {
+				enable = true,
+			},
+			autotag = {
 				enable = true,
 			},
 			incremental_selection = {

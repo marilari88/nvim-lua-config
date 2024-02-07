@@ -1,21 +1,30 @@
 return {
 	"nvim-lua/plenary.nvim",
-	"L3MON4D3/LuaSnip",
 	"HiPhish/nvim-ts-rainbow2",
-	"rcarriga/nvim-notify",
+	{
+		"rcarriga/nvim-notify",
+		keys = {
+			{
+				"<leader>c",
+				function()
+					require("notify").dismiss({ silent = true, pending = true })
+				end,
+				desc = "Dismiss all Notifications",
+			},
+		},
+	},
 	{
 		"norcalli/nvim-colorizer.lua",
 		config = function()
 			require("colorizer").setup()
 		end,
 	},
-	--[[ { ]]
-	--[[ 	"windwp/nvim-ts-autotag", ]]
-	--[[ 	config = function() ]]
-	--[[ 		require("nvim-ts-autotag").setup() ]]
-	--[[ 	end, ]]
-	--[[ }, ]]
-	"jose-elias-alvarez/null-ls.nvim",
+	{
+		"windwp/nvim-ts-autotag",
+		config = function()
+			require("nvim-ts-autotag").setup()
+		end,
+	},
 	"sainnhe/everforest",
 	{
 		"folke/tokyonight.nvim",
@@ -34,7 +43,6 @@ return {
 	{ "catppuccin/nvim", name = "catppuccin" },
 	"morhetz/gruvbox",
 	"Mofiqul/dracula.nvim",
-	"kyazdani42/nvim-web-devicons",
 	{
 		"marilari88/twoslash-queries.nvim",
 		config = function()
@@ -52,7 +60,6 @@ return {
 			require("nvim-surround").setup()
 		end,
 	},
-	{ "kyazdani42/nvim-web-devicons", lazy = true },
 	{
 		"folke/trouble.nvim",
 		config = function()

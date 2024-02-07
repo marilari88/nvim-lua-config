@@ -3,7 +3,7 @@ local wo = vim.wo
 local opt = vim.opt
 
 o.smartcase = true
-o.laststatus = 2
+o.laststatus = 3
 o.hlsearch = true
 o.incsearch = true
 o.ignorecase = false

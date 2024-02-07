@@ -10,6 +10,7 @@ return {
 				end
 			end,
 			open_mapping = [[<Leader>x]],
+			insert_mappings = false,
 			direction = "vertical",
 			auto_scroll = true,
 		})

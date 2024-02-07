@@ -83,11 +83,7 @@ return {
 		require("lspconfig").cssls.setup({})
 		require("lspconfig").prismals.setup({})
 		require("lspconfig").astro.setup({})
-
-		--[[ require("lspconfig").emmet_ls.setup({ ]]
-		--[[ 	capabilities = capabilities, ]]
-		--[[ 	filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" }, ]]
-		--[[ }) ]]
+		require("lspconfig").intelephense.setup({})
 
 		require("lspconfig").lua_ls.setup({
 			on_attach = function(client, bufnr)
@@ -98,16 +94,27 @@ return {
 			settings = {
 				Lua = {
 					runtime = {
-						-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
 						version = "LuaJIT",
+						pathStrict = true,
+						path = {
+							"lua/?.lua",
+							"lua/?/init.lua",
+						},
 					},
 					diagnostics = {
 						-- Get the language server to recognize the `vim` global
 						globals = { "vim" },
 					},
 					workspace = {
-						-- Make the server aware of Neovim runtime files
-						library = vim.api.nvim_get_runtime_file("", true),
+						library = {
+							"${3rd}/luv/library",
+							vim.env.VIMRUNTIME,
+							vim.fn.stdpath("data") .. "/lazy/plenary.nvim",
+							vim.fn.stdpath("data") .. "/lazy/telescope.nvim",
+						},
+						maxPreload = 1600,
+						preloadFileSize = 1000,
+						checkThirdParty = false,
 					},
 					-- Do not send telemetry data containing a randomized but unique identifier
 					telemetry = {
@@ -115,27 +122,6 @@ return {
 					},
 				},
 			},
-		})
-
-		local null_ls = require("null-ls")
-
-		null_ls.setup({
-			debug = true,
-			sources = {
-				null_ls.builtins.code_actions.gitsigns,
-				null_ls.builtins.diagnostics.eslint_d.with({
-					only_local = true,
-				}),
-				null_ls.builtins.code_actions.eslint_d,
-				null_ls.builtins.formatting.prettierd,
-				null_ls.builtins.formatting.stylua,
-			},
-			on_attach = function(client, bufnr)
-				if client.server_capabilities.documentFormattingProvider then
-					vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format({timeout_ms = 5000})")
-				end
-				on_attach(client, bufnr)
-			end,
 		})
 	end,
 }
