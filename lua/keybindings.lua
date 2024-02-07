@@ -30,6 +30,7 @@ map("n", "<C-l>", "<C-w>l")
 
 -- save
 map("n", "<Leader>w", ":w<CR>")
+map("n", "<Leader>W", ":wq<CR>")
 
 -- quit
 map("n", "<Leader>q", ":q<CR>")
@@ -59,6 +60,8 @@ map("n", "Y", "y$")
 map("n", "<Leader>n", "<cmd>NvimTreeToggle<CR>")
 
 map("n", "<Leader>g", "<cmd>Git<CR>")
+
+map("n", "<Leader>P", "<cmd>G push<CR>")
 
 map("n", "<leader>m", "<cmd>MarksListAll<cr>")
 
