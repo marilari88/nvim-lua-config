@@ -19,27 +19,8 @@ return {
 			require("colorizer").setup()
 		end,
 	},
-	{
-		"windwp/nvim-ts-autotag",
-		config = function()
-			require("nvim-ts-autotag").setup()
-		end,
-	},
 	"sainnhe/everforest",
-	{
-		"folke/tokyonight.nvim",
-		styles = {
-			-- Style to be applied to different syntax groups
-			-- Value is any valid attr-list value for `:help nvim_set_hl`
-			comments = { italic = true },
-			keywords = { italic = true },
-			functions = { italic = true },
-			variables = { italic = true },
-			-- Background styles. Can be "dark", "transparent" or "normal"
-			sidebars = "dark", -- style for sidebars, see below
-			floats = "dark", -- style for floating windows
-		},
-	},
+	"folke/tokyonight.nvim",
 	{ "catppuccin/nvim", name = "catppuccin" },
 	"morhetz/gruvbox",
 	"Mofiqul/dracula.nvim",
@@ -58,12 +39,6 @@ return {
 		"kylechui/nvim-surround",
 		config = function()
 			require("nvim-surround").setup()
-		end,
-	},
-	{
-		"folke/trouble.nvim",
-		config = function()
-			require("trouble").setup({})
 		end,
 	},
 	{
@@ -87,9 +62,10 @@ return {
 	"stevearc/dressing.nvim",
 	"mg979/vim-visual-multi",
 	"christoomey/vim-tmux-navigator",
+	{ "kyazdani42/nvim-web-devicons", commit = "313d9e7193354c5de7cdb1724f9e2d3f442780b0" },
 	{
 		"goolord/alpha-nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
+		dependencies = { "kyazdani42/nvim-web-devicons" },
 		config = function()
 			require("alpha").setup(require("alpha.themes.startify").config)
 		end,

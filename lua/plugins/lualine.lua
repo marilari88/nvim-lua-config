@@ -14,19 +14,14 @@ local colors = {
   red      = '#ec5f67',
 }
 
-local conditions = {
-	buffer_not_empty = function()
-		return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
-	end,
-	hide_in_width = function()
-		return vim.fn.winwidth(0) > 80
-	end,
-	check_git_workspace = function()
-		local filepath = vim.fn.expand("%:p:h")
-		local gitdir = vim.fn.finddir(".git", filepath .. ";")
-		return gitdir and #gitdir > 0 and #gitdir < #filepath
-	end,
-}
+local function show_macro_recording()
+	local recording_register = vim.fn.reg_recording()
+	if recording_register == "" then
+		return ""
+	else
+		return "Recording @" .. recording_register
+	end
+end
 
 local config2 = {
 	options = {
@@ -40,7 +35,7 @@ local config2 = {
 	},
 	sections = {
 		lualine_a = { "mode" },
-		lualine_b = { "filename" },
+		lualine_b = { { "filename", path = 1 } },
 		lualine_c = {
 			"branch",
 			"diff",
@@ -48,6 +43,12 @@ local config2 = {
 				"diagnostics",
 				sources = { "nvim_diagnostic" },
 				symbols = { error = "😱", warn = "😥", hint = "😫" },
+			},
+		},
+		lualine_d = {
+			{
+				"macro_recording",
+				fmt = show_macro_recording,
 			},
 		},
 		lualine_x = { "filetype" },

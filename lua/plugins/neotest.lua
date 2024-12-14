@@ -2,6 +2,7 @@ return {
 	"nvim-neotest/neotest",
 	event = "VeryLazy",
 	dependencies = {
+		"nvim-neotest/nvim-nio",
 		"antoinemadec/FixCursorHold.nvim",
 		"haydenmeade/neotest-jest",
 		"marilari88/neotest-vitest",
@@ -10,14 +11,62 @@ return {
 	config = function(opts)
 		require("neotest").setup({
 			adapters = {
-				require("neotest-vitest"),
-				require("neotest-jest"),
-				require("neotest-plenary"),
+				require("neotest-vitest")({
+					vitestCommand = "yarn vitest",
+				}),
 			},
-			quickfix = { open = true },
+			icons = {
+				running_animated = {
+					"",
+					"🞅",
+					"🞈",
+					"🞉",
+					"",
+					"",
+					"🞉",
+					"🞈",
+					"🞅",
+					"",
+				},
+			},
+			quickfix = { open = false },
 			output = {
 				enabled = true,
 				open = "botright split | resize 15",
+			},
+			watch = {
+				enabled = true,
+				symbol_queries = {
+					typescript = [[
+        ;query
+        ;Captures named imports
+        (import_specifier name: (identifier) @symbol)
+        ;Captures default import
+        (import_clause (identifier) @symbol)
+        ;Capture require statements
+        (variable_declarator 
+        name: (identifier) @symbol
+        value: (call_expression (identifier) @function  (#eq? @function "require")))
+          ;Capture namespace imports
+          (namespace_import (identifier) @symbol)
+
+
+          ]],
+					javascript = [[
+          ;query
+          ;Captures imported types
+          (import_specifier name: (identifier) @symbol)
+          ;Captures imported types
+          (import_clause (identifier) @symbol)
+          ]],
+					tsx = [[
+          ;query
+          ;Captures imported types
+          (import_specifier name: (identifier) @symbol)
+          ;Captures imported types
+          (import_clause (identifier) @symbol)
+          ]],
+				},
 			},
 		})
 	end,
@@ -28,7 +77,7 @@ return {
 				--[[ require("neotest").summary.toggle() ]]
 				vim.cmd([[Neotest summary]])
 			end,
-			desc = "Neotest toggle",
+			desc = "Neotest toggle summary",
 		},
 		{
 			"<leader>tp",
@@ -57,6 +106,27 @@ return {
 				vim.cmd([[Neotest attach]])
 			end,
 			desc = "Neotest attach",
+		},
+		{
+			"<leader>tww",
+			function()
+				require("neotest").watch.watch({ vitestCommand = "yarn vitest --watch" })
+			end,
+			desc = "Run Watch file",
+		},
+		{
+			"<leader>twr",
+			function()
+				require("neotest").run.run({ vitestCommand = "yarn vitest --watch" })
+			end,
+			desc = "Run Watch",
+		},
+		{
+			"<leader>twf",
+			function()
+				require("neotest").run.run({ vim.fn.expand("%"), vitestCommand = "vitest --watch" })
+			end,
+			desc = "Run Watch File",
 		},
 	},
 }

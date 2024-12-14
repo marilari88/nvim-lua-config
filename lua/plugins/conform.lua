@@ -6,7 +6,7 @@ return {
 		{
 			"<leader>f",
 			function()
-				require("conform").format({ async = true, lsp_fallback = true })
+				require("conform").format({ async = true, lsp_format = "fallback" })
 			end,
 			mode = "",
 			desc = "format current buffer",
@@ -15,9 +15,9 @@ return {
 	opts = {
 		formatters_by_ft = {
 			lua = { "stylua" },
-			javascript = { { "prettierd", "prettier" } },
-			typescript = { { "prettierd", "prettier" } },
-			typescriptreact = { { "prettierd", "prettier" } },
+			javascript = { "biome", "prettierd", "prettier", stop_after_first = true },
+			typescript = { "biome", "prettierd", "prettier", stop_after_first = true },
+			typescriptreact = { "biome", "prettierd", "prettier", stop_after_first = true },
 			html = { "prettierd" },
 			json = { "prettierd" },
 			yaml = { "prettierd" },
@@ -27,9 +27,20 @@ return {
 		},
 		format_on_save = {
 			timeout_ms = 500,
-			lsp_fallback = true,
+			lsp_format = "fallback",
 		},
 		log_level = vim.log.levels.DEBUG,
+		formatters = {
+			biome = {
+				require_cwd = true,
+			},
+			prettierd = {
+				require_cwd = true,
+			},
+			prettier = {
+				require_cwd = true,
+			},
+		},
 	},
 	init = function()
 		vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"

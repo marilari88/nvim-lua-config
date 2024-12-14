@@ -1,6 +1,7 @@
 return {
 	"b0o/incline.nvim",
 	dependencies = { "kyazdani42/nvim-web-devicons" },
+	enabled = false,
 	opts = {
 		window = { padding = 0, margin = { vertical = 0, horizontal = 1 } },
 		render = function(props)

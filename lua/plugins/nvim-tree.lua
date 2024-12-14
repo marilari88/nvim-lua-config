@@ -1,6 +1,6 @@
 return {
-	"kyazdani42/nvim-tree.lua",
-	tag = "nightly",
+	"nvim-tree/nvim-tree.lua",
+	dependencies = { "nvim-tree/nvim-web-devicons" },
 	config = function()
 		require("nvim-tree").setup({
 			sort_by = "case_sensitive",
@@ -11,11 +11,6 @@ return {
 			},
 			view = {
 				adaptive_size = true,
-				mappings = {
-					list = {
-						{ key = "l", action = "edit_no_picker" },
-					},
-				},
 			},
 			renderer = {
 				group_empty = true,
@@ -37,6 +32,19 @@ return {
 				enable = true,
 				update_root = true,
 			},
+			on_attach = function(bufnr)
+				local api = require("nvim-tree.api")
+
+				local function opts(desc)
+					return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+				end
+
+				-- default mappings
+				api.config.mappings.default_on_attach(bufnr)
+
+				-- custom mappings
+				vim.keymap.set("n", "l", api.node.open.edit, opts("Open fast"))
+			end,
 		})
 
 		vim.api.nvim_set_keymap("n", "<Leader>n", "<cmd>NvimTreeFindFileToggle<CR>", { noremap = true })

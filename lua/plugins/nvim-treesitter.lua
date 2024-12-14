@@ -5,6 +5,7 @@ return {
 		"JoosepAlviste/nvim-ts-context-commentstring",
 		"nvim-treesitter/nvim-treesitter-context",
 		"nvim-treesitter/playground",
+		"windwp/nvim-ts-autotag",
 		"HiPhish/rainbow-delimiters.nvim",
 		"nvim-treesitter/nvim-treesitter-textobjects",
 	},
@@ -22,9 +23,6 @@ return {
 			highlight = {
 				enable = true,
 			},
-			autotag = {
-				enable = true,
-			},
 			incremental_selection = {
 				enable = true,
 				keymaps = {
@@ -35,6 +33,8 @@ return {
 				},
 			},
 		})
+
+		require("nvim-ts-autotag").setup()
 
 		local rainbow_delimiters = require("rainbow-delimiters")
 

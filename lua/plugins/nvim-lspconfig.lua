@@ -13,7 +13,7 @@ vim.keymap.set("n", "[g", vim.diagnostic.goto_prev, opts)
 vim.keymap.set("n", "]g", vim.diagnostic.goto_next, opts)
 -- vim.keymap.set('n', '<Leader>d', vim.diagnostic.setloclist, opts)
 --
-vim.keymap.set("n", "<Leader>d", "<cmd>TroubleToggle workspace_diagnostics<CR>", opts)
+vim.keymap.set("n", "<Leader>d", "<cmd>Trouble diagnostics toggle<CR>", opts)
 -- vim.keymap.set('n', '[g', trouble.next({skip_groups = true, jump = true}), opts)
 -- vim.keymap.set('n', ']g', trouble.previous({skip_groups = true, jump = true}), opts)
 
@@ -32,13 +32,13 @@ local on_attach = function(client, bufnr)
 	--  vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
 	-- vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<CR>", opts)
 	-- vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<CR>", opts)
-	vim.keymap.set("n", "gr", "<cmd>TroubleToggle lsp_references<CR>", opts)
+	vim.keymap.set("n", "gr", "<cmd>Trouble lsp toggle focus=false<CR>", opts)
 	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
 	vim.keymap.set("n", "<Leader>k", vim.lsp.buf.signature_help, bufopts)
 	vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, bufopts)
-	vim.keymap.set("n", "<Leader>a", vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set("v", "<Leader>a", vim.lsp.buf.code_action, bufopts)
+	vim.keymap.set("n", "<Leader>aa", vim.lsp.buf.code_action, bufopts)
+	vim.keymap.set("v", "<Leader>aa", vim.lsp.buf.code_action, bufopts)
 	vim.keymap.set("n", "<Leader>f", vim.lsp.buf.format, bufopts)
 end
 
@@ -50,7 +50,7 @@ return {
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
 		capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
-		require("lspconfig").tsserver.setup({
+		require("lspconfig").ts_ls.setup({
 			commands = {
 				OrganizeImports = {
 					organize_imports,
@@ -70,6 +70,11 @@ return {
 				on_attach(client, bufnr)
 			end,
 			capabilities = capabilities,
+			settings = {
+				completions = {
+					completeFunctionCalls = true,
+				},
+			},
 		})
 
 		require("lspconfig").tailwindcss.setup({
@@ -84,6 +89,9 @@ return {
 		require("lspconfig").prismals.setup({})
 		require("lspconfig").astro.setup({})
 		require("lspconfig").intelephense.setup({})
+		require("lspconfig").biome.setup({})
+
+		require("neodev").setup({})
 
 		require("lspconfig").lua_ls.setup({
 			on_attach = function(client, bufnr)
