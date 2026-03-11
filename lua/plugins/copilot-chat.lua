@@ -1,219 +1,127 @@
 local prompts = {
-	-- Code related prompts
-	Explain = "Please explain how the following code works.",
-	Review = "Please review the following code and provide suggestions for improvement.",
-	Tests = "Generate Tests using vitest, testing library and userEvent for this code. vitest has globals = false. DO NOT USE jest primitives. It is important to test the accessibility of the component",
-	Refactor = "Please refactor the following code to improve its clarity and readability.",
-	FixCode = "Please fix the following code to make it work as intended.",
-	FixError = "Please explain the error in the following text and provide a solution.",
-	BetterNamings = "Please provide better names for the following variables and functions.",
-	Documentation = "Please provide documentation for the following code.",
-	Summarize = "Please summarize the following text.",
-	Spelling = "Please correct any grammar and spelling errors in the following text.",
-	Wording = "Please improve the grammar and wording of the following text.",
-	Concise = "Please rewrite the following text to make it more concise.",
+	Explain = {
+		prompt = "> /COPILOT_EXPLAIN\n\nWrite an explanation for the selected code as paragraphs of text.",
+	},
+	Review = {
+		prompt = "> /COPILOT_REVIEW\n\nReview the selected code.",
+	},
+	fix = {
+		prompt = "Identify and briefly explain the issues in the code. Then provide the minimal fix. Output only: 1) Issues (bulleted), 2) Corrected code (single code block with proper language tag), 3) Rationale (short). Preserve public API and behavior; avoid unnecessary changes and follow the existing style.",
+	},
+	Optimize = {
+		prompt = "Optimize the selected code to improve performance and readability. Explain your optimization strategy and the benefits of your changes.",
+	},
+	Docs = {
+		prompt = "Please add documentation comments to the selected code.",
+	},
+	Tests = {
+		prompt = "Please generate tests for my code.",
+	},
+	Commit = {
+		prompt = "> #git:staged\n\nWrite commit message for the change with gitmoji. Keep the title under 50 characters and wrap message at 72 characters. Format as a gitcommit code block. #url:https://gitmoji.dev/",
+	},
+	["Test Staged"] = {
+		prompt = "> #git:staged\n\nWrite test for the staged changes using vitest.",
+	},
+	["Review Staged"] = {
+		prompt = "> /COPILOT_REVIEW #git:staged\n\nReview the staged changes",
+	},
+	["Summarize Staged"] = {
+		prompt = "> #git:staged\n\nSummarize the staged changes as bullet points, highlighting user-visible impact, performance implications, and breaking changes.",
+	},
 }
 
 return {
-	{
-		"CopilotC-Nvim/CopilotChat.nvim",
-		branch = "main",
-		dependencies = {
-			{ "nvim-telescope/telescope.nvim" }, -- Use telescope for help actions
-			{ "nvim-lua/plenary.nvim" },
-		},
-		opts = {
-			question_header = "## User ",
-			answer_header = "## Copilot ",
-			error_header = "## Error ",
-			separator = " ", -- Separator to use in chat
+	"CopilotC-Nvim/CopilotChat.nvim",
+	branch = "main",
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+	},
+	build = "make tiktoken",
+	event = "VeryLazy",
+	config = function()
+		require("CopilotChat").setup({
+			model = "gpt-5",
 			prompts = prompts,
-			auto_follow_cursor = false, -- Don't follow the cursor after getting response
-			show_help = false, -- Show help in virtual text, set to true if that's 1st time using Copilot Chat
-			mappings = {
-				-- Use tab for completion
-				complete = {
-					detail = "Use @<Tab> or /<Tab> for options.",
-					insert = "<C-k>",
-				},
-				-- Close the chat
-				close = {
-					normal = "q",
-					insert = "<C-c>",
-				},
-				-- Reset the chat buffer
-				reset = {
-					normal = "<C-l>",
-					insert = "<C-l>",
-				},
-				-- Submit the prompt to Copilot
-				submit_prompt = {
-					normal = "<CR>",
-					insert = "<C-CR>",
-				},
-				-- Accept the diff
-				accept_diff = {
-					normal = "<C-y>",
-					insert = "<C-y>",
-				},
-				-- Show the diff
-				show_diff = {
-					normal = "gmd",
-				},
-				-- Show the prompt
-				show_info = {
-					normal = "gmp",
-				},
-				-- Show the user selection
-				show_context = {
-					normal = "gms",
-				},
+			selection = function(source)
+				return require("CopilotChat.select").visual(source) or require("CopilotChat.select").line(source)
+			end,
+			window = {
+				layout = "float",
+				width = 80, -- Fixed width in columns
+				height = 20, -- Fixed height in rows
+				border = "rounded", -- 'single', 'double', 'rounded', 'solid'
+				title = "🤖 AI Assistant",
+				zindex = 100, -- Ensure window stays on top
 			},
-		},
-		config = function(_, opts)
-			local chat = require("CopilotChat")
-			local select = require("CopilotChat.select")
-			-- Use unnamed register for the selection
-			opts.selection = select.unnamed
 
-			-- Override the git prompts message
-			opts.prompts.Commit = {
-				prompt = "Write commit message for the change with commitizen convention. Use gitmoji",
-				selection = select.gitdiff,
-			}
-			opts.prompts.CommitStaged = {
-				prompt = "Write commit message for the change with commitizen convention. Use gitmoji",
-				selection = function(source)
-					return select.gitdiff(source, true)
-				end,
-			}
+			headers = {
+				user = "👤 You: ",
+				assistant = "🤖 Copilot: ",
+				tool = "🔧 Tool: ",
+			},
+			separator = "━━",
+			show_folds = false,
+		})
 
-			chat.setup(opts)
+		vim.api.nvim_create_user_command("CopilotChatVisual", function(args)
+			require("CopilotChat").ask(args.args, { selection = require("CopilotChat.select").visual })
+		end, { nargs = "*", range = true })
 
-			vim.api.nvim_create_user_command("CopilotChatVisual", function(args)
-				chat.ask(args.args, { selection = select.visual })
-			end, { nargs = "*", range = true })
+		vim.api.nvim_create_user_command("CopilotChatBuffer", function(args)
+			require("CopilotChat").ask(args.args, { selection = require("CopilotChat.select").buffer })
+		end, { nargs = "*", range = true })
 
-			-- Inline chat with Copilot
-			vim.api.nvim_create_user_command("CopilotChatInline", function(args)
-				chat.ask(args.args, {
-					selection = select.visual,
-					window = {
-						layout = "float",
-						relative = "cursor",
-						width = 1,
-						height = 0.4,
-						row = 1,
-					},
-				})
-			end, { nargs = "*", range = true })
-
-			-- Restore CopilotChatBuffer
-			vim.api.nvim_create_user_command("CopilotChatBuffer", function(args)
-				chat.ask(args.args, { selection = select.buffer })
-			end, { nargs = "*", range = true })
-
-			-- Custom buffer for CopilotChat
-			vim.api.nvim_create_autocmd("BufEnter", {
-				pattern = "copilot-*",
-				callback = function()
-					vim.opt_local.relativenumber = true
-					vim.opt_local.number = true
-
-					-- Get current filetype and set it to markdown if the current filetype is copilot-chat
-					local ft = vim.bo.filetype
-					if ft == "copilot-chat" then
-						vim.bo.filetype = "markdown"
-					end
-				end,
+		vim.api.nvim_create_user_command("CopilotChatInline", function(args)
+			require("CopilotChat").ask(args.args, {
+				selection = require("CopilotChat.select").visual,
+				window = {
+					layout = "float",
+					relative = "cursor",
+					width = 1,
+					height = 0.4,
+					row = 1,
+				},
 			})
-		end,
-		event = "VeryLazy",
-		keys = {
-			-- Show help actions with telescope
-			{
-				"<leader>ah",
-				function()
-					local actions = require("CopilotChat.actions")
-					require("CopilotChat.integrations.telescope").pick(actions.help_actions())
-				end,
-				desc = "CopilotChat - Help actions",
-			},
-			-- Show prompts actions with telescope
-			{
-				"<leader>ap",
-				function()
-					local actions = require("CopilotChat.actions")
-					require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
-				end,
-				desc = "CopilotChat - Prompt actions",
-			},
-			{
-				"<leader>ap",
-				":lua require('CopilotChat.integrations.telescope').pick(require('CopilotChat.actions').prompt_actions({selection = require('CopilotChat.select').visual}))<CR>",
-				mode = "x",
-				desc = "CopilotChat - Prompt actions",
-			},
-			-- Code related commands
-			{ "<leader>ae", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
-			{ "<leader>at", "<cmd>CopilotChatTests<cr>", desc = "CopilotChat - Generate tests" },
-			{ "<leader>ar", "<cmd>CopilotChatReview<cr>", desc = "CopilotChat - Review code" },
-			{ "<leader>aR", "<cmd>CopilotChatRefactor<cr>", desc = "CopilotChat - Refactor code" },
-			{ "<leader>an", "<cmd>CopilotChatBetterNamings<cr>", desc = "CopilotChat - Better Naming" },
-			-- Chat with Copilot in visual mode
-			{
-				"<leader>av",
-				":CopilotChatVisual",
-				mode = "x",
-				desc = "CopilotChat - Open in vertical split",
-			},
-			{
-				"<leader>ax",
-				":CopilotChatInline<cr>",
-				mode = "x",
-				desc = "CopilotChat - Inline chat",
-			},
-			-- Custom input for CopilotChat
-			{
-				"<leader>ai",
-				function()
-					local input = vim.fn.input("Ask Copilot: ")
-					if input ~= "" then
-						vim.cmd("CopilotChat " .. input)
-					end
-				end,
-				desc = "CopilotChat - Ask input",
-			},
-			-- Generate commit message based on the git diff
-			{
-				"<leader>am",
-				"<cmd>CopilotChatCommit<cr>",
-				desc = "CopilotChat - Generate commit message for all changes",
-			},
-			{
-				"<leader>aM",
-				"<cmd>CopilotChatCommitStaged<cr>",
-				desc = "CopilotChat - Generate commit message for staged changes",
-			},
-			-- Quick chat with Copilot
-			{
-				"<leader>aq",
-				function()
-					local input = vim.fn.input("Quick Chat: ")
-					if input ~= "" then
-						vim.cmd("CopilotChatBuffer " .. input)
-					end
-				end,
-				desc = "CopilotChat - Quick chat",
-			},
-			-- Debug
-			{ "<leader>ad", "<cmd>CopilotChatDebugInfo<cr>", desc = "CopilotChat - Debug Info" },
-			-- Fix the issue with diagnostic
-			{ "<leader>af", "<cmd>CopilotChatFixDiagnostic<cr>", desc = "CopilotChat - Fix Diagnostic" },
-			-- Clear buffer and chat history
-			{ "<leader>al", "<cmd>CopilotChatReset<cr>", desc = "CopilotChat - Clear buffer and chat history" },
-			-- Toggle Copilot Chat Vsplit
-			{ "<leader>av", "<cmd>CopilotChatToggle<cr>", desc = "CopilotChat - Toggle" },
+		end, { nargs = "*", range = true })
+	end,
+	keys = {
+		{
+			"<leader>av",
+			":CopilotChatVisual ",
+			mode = "x",
+			desc = "Copilot Chat Visual",
+		},
+		{
+			"<leader>ax",
+			":CopilotChatInline ",
+			mode = "x",
+			desc = "Copilot Chat Inline",
+		},
+		{
+			"<leader>aq",
+			function()
+				local input = vim.fn.input("Quick Chat: ")
+				if input ~= "" then
+					require("CopilotChat").ask(input, {
+						selection = require("CopilotChat.select").buffer,
+					})
+				end
+			end,
+			desc = "CopilotChat - Quick chat",
+			mode = "n",
+		},
+		{
+			"<leader>at",
+			"<cmd>CopilotChatToggle<cr>",
+			desc = "Copilot Chat Toggle",
+			mode = { "n", "x" },
+		},
+		{
+			"<leader>ap",
+			"<cmd>CopilotChatPrompts<cr>",
+			desc = "Copilot Chat Toggle",
+			mode = { "n", "x" },
 		},
 	},
 }

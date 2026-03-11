@@ -42,6 +42,9 @@ map("n", "<C-n>", "<cmd>bnext<CR>")
 -- terminal mappings
 map("t", "jj", "<C-\\><C-n>")
 
+-- paste mappings
+vim.keymap.set({ "n", "v", "x" }, "<leader>y", '"+y')
+
 -- Windows resizing
 map("n", "<C-left>", "<C-w>5<")
 map("n", "<C-right>", "<C-w>5>")
@@ -60,8 +63,6 @@ map("n", "<Leader>n", "<cmd>NvimTreeToggle<CR>")
 map("n", "<Leader>g", "<cmd>Git<CR>")
 
 map("n", "<Leader>P", "<cmd>G push<CR>")
-
-map("n", "<leader>m", "<cmd>MarksListAll<cr>")
 
 map("n", "<leader>\\", "<cmd>0ToggleTerm direction=float<cr>")
 

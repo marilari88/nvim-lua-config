@@ -22,6 +22,7 @@ opt.autoindent = true
 opt.shiftround = true
 opt.tabstop = 2
 opt.shiftwidth = 2
+opt.undofile = true
 
 wo.number = true
 wo.relativenumber = true
@@ -42,13 +43,9 @@ api.nvim_create_autocmd("TermLeave", {
 -- Highlight on yank
 local yankGrp = api.nvim_create_augroup("YankHighlight", { clear = true })
 api.nvim_create_autocmd("TextYankPost", {
-	command = "silent! lua vim.highlight.on_yank()",
+	command = "silent! lua vim.hl.on_yank()",
 	group = yankGrp,
 })
-
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
 -- Disable autoformat on enter (can exit comment block when start new line)
 vim.cmd([[autocmd BufEnter * set formatoptions-=cro]])

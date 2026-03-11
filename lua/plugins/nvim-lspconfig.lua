@@ -9,8 +9,6 @@ end
 
 local opts = { noremap = true, silent = true }
 -- vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float, opts)
-vim.keymap.set("n", "[g", vim.diagnostic.goto_prev, opts)
-vim.keymap.set("n", "]g", vim.diagnostic.goto_next, opts)
 -- vim.keymap.set('n', '<Leader>d', vim.diagnostic.setloclist, opts)
 --
 vim.keymap.set("n", "<Leader>d", "<cmd>Trouble diagnostics toggle<CR>", opts)
@@ -19,10 +17,7 @@ vim.keymap.set("n", "<Leader>d", "<cmd>Trouble diagnostics toggle<CR>", opts)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-	-- Enable completion triggered by <c-x><c-o>
-	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-
+local on_attach = function(_, bufnr)
 	-- Mappings.
 	-- See `:help vim.lsp.*` for documentation on any of the below functions
 	local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -33,67 +28,68 @@ local on_attach = function(client, bufnr)
 	-- vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<CR>", opts)
 	-- vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<CR>", opts)
 	vim.keymap.set("n", "gr", "<cmd>Trouble lsp toggle focus=false<CR>", opts)
-	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
-	vim.keymap.set("n", "<Leader>k", vim.lsp.buf.signature_help, bufopts)
-	vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, bufopts)
-	vim.keymap.set("n", "<Leader>aa", vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set("v", "<Leader>aa", vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set("n", "<Leader>f", vim.lsp.buf.format, bufopts)
+	--[[ vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts) ]]
+	--[[ vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts) ]]
+	--[[ vim.keymap.set("n", "<Leader>k", vim.lsp.buf.signature_help, bufopts) ]]
+	--[[ vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, bufopts) ]]
+	--[[ vim.keymap.set("n", "<Leader>aa", vim.lsp.buf.code_action, bufopts) ]]
+	--[[ vim.keymap.set("v", "<Leader>aa", vim.lsp.buf.code_action, bufopts) ]]
+	--[[ vim.keymap.set("n", "<Leader>f", vim.lsp.buf.format, bufopts) ]]
 end
 
 return {
 	"neovim/nvim-lspconfig",
+	--[[ dependencies = { "saghen/blink.cmp" }, ]]
 	event = "BufReadPre",
 	config = function()
-		-- Add additional capabilities supported by nvim-cmp
-		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+		local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-		require("lspconfig").ts_ls.setup({
-			commands = {
-				OrganizeImports = {
-					organize_imports,
-					description = "Organize Imports",
-				},
-			},
+		vim.lsp.config("ts_ls", {
 			on_attach = function(client, bufnr)
 				client.server_capabilities.documentFormattingProvider = false
 				client.server_capabilities.documentRangeFormattingProvider = false
 
 				require("nvim-navbuddy").attach(client, bufnr)
-
-				vim.api.nvim_buf_set_keymap(bufnr, "n", "<Leader>;", ":OrganizeImports<CR>", opts)
-
 				require("twoslash-queries").attach(client, bufnr)
+
+				vim.keymap.set("n", "<leader>;", function()
+					organize_imports()
+				end, { buffer = bufnr, silent = true, noremap = true })
 
 				on_attach(client, bufnr)
 			end,
 			capabilities = capabilities,
 			settings = {
-				completions = {
-					completeFunctionCalls = true,
-				},
+				complete_function_calls = true,
 			},
 		})
 
-		require("lspconfig").tailwindcss.setup({
+		vim.lsp.config("tailwindcss", {
 			settings = {
 				["tailwindCSS"] = {
 					experimental = { classRegex = { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" } },
 				},
 			},
+			filetypes = {
+				"css",
+				"scss",
+				"sass",
+				"html",
+				"heex",
+				"elixir",
+				"javascript",
+				"javascriptreact",
+				"typescript",
+				"typescriptreact",
+				"svelte",
+			},
 		})
 
-		require("lspconfig").cssls.setup({})
-		require("lspconfig").prismals.setup({})
-		require("lspconfig").astro.setup({})
-		require("lspconfig").intelephense.setup({})
-		require("lspconfig").biome.setup({})
+		vim.lsp.config("prismals", {})
+		vim.lsp.config("astro", {})
+		vim.lsp.config("intelephense", {})
 
-		require("neodev").setup({})
-
-		require("lspconfig").lua_ls.setup({
+		vim.lsp.config("lua_ls", {
 			on_attach = function(client, bufnr)
 				client.server_capabilities.documentFormattingProvider = false
 				client.server_capabilities.documentRangeFormattingProvider = false
@@ -118,7 +114,6 @@ return {
 							"${3rd}/luv/library",
 							vim.env.VIMRUNTIME,
 							vim.fn.stdpath("data") .. "/lazy/plenary.nvim",
-							vim.fn.stdpath("data") .. "/lazy/telescope.nvim",
 						},
 						maxPreload = 1600,
 						preloadFileSize = 1000,
@@ -131,5 +126,6 @@ return {
 				},
 			},
 		})
+		vim.lsp.enable({ "ts_ls", "tailwindcss", "prismals", "astro", "intelephense" })
 	end,
 }

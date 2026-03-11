@@ -1,3 +1,4 @@
+vim.env.ESLINT_D_PPID = vim.fn.getpid()
 return {
 	{
 		"mfussenegger/nvim-lint",
@@ -6,11 +7,10 @@ return {
 			-- Event to trigger linters
 			events = { "BufReadPost", "InsertLeave", "TextChanged", "FocusGained" },
 			linters_by_ft = {
-				["javascript"] = { "eslint_d" },
-				["javascriptreact"] = { "eslint_d" },
 				["typescript"] = { "eslint_d" },
 				["typescriptreact"] = { "eslint_d" },
-				["php"] = { "phpstan" },
+				["javascript"] = { "eslint_d" },
+				["javascriptreact"] = { "eslint_d" },
 			},
 		},
 		config = function(_, opts)
@@ -56,9 +56,12 @@ return {
 					return linter and not (type(linter) == "table" and linter.condition and not linter.condition(ctx))
 				end, names)
 
+				local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
+				local client = get_clients({ bufnr = 0 })[1] or {}
 				-- Run linters.
-				if #names > 0 then
-					lint.try_lint(names)
+				if #names > 0 and client then
+					--[[ lint.try_lint(names) ]]
+					lint.try_lint(names, { cwd = client.root_dir })
 				end
 			end
 

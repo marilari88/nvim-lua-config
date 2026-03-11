@@ -1,8 +1,11 @@
 -- diagnostic
 vim.diagnostic.config({
 	severity_sort = true,
-	virtual_text = true,
+	virtual_text = { current_line = true },
 	float = {
+		border = "rounded",
+	},
+	window = {
 		border = "rounded",
 	},
 })

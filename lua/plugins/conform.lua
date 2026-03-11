@@ -18,6 +18,7 @@ return {
 			javascript = { "biome", "prettierd", "prettier", stop_after_first = true },
 			typescript = { "biome", "prettierd", "prettier", stop_after_first = true },
 			typescriptreact = { "biome", "prettierd", "prettier", stop_after_first = true },
+			css = { "prettierd", "prettier", stop_after_first = true },
 			html = { "prettierd" },
 			json = { "prettierd" },
 			yaml = { "prettierd" },

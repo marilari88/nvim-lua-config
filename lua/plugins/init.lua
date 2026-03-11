@@ -14,16 +14,21 @@ return {
 		},
 	},
 	{
-		"norcalli/nvim-colorizer.lua",
+		"catgoose/nvim-colorizer.lua",
 		config = function()
-			require("colorizer").setup()
+			require("colorizer").setup({
+				user_default_options = {
+					tailwind = true,
+					tailwind_opts = {
+						update_names = true,
+					},
+				},
+			})
 		end,
 	},
-	"sainnhe/everforest",
 	"folke/tokyonight.nvim",
 	{ "catppuccin/nvim", name = "catppuccin" },
 	"morhetz/gruvbox",
-	"Mofiqul/dracula.nvim",
 	{
 		"marilari88/twoslash-queries.nvim",
 		config = function()
@@ -42,32 +47,28 @@ return {
 		end,
 	},
 	{
-		"chentoast/marks.nvim",
-		config = function()
-			require("marks").setup({})
-		end,
-	},
-	{
 		"karb94/neoscroll.nvim",
 		config = function()
 			require("neoscroll").setup()
 		end,
 	},
-	{
-		"Pocco81/true-zen.nvim",
-		config = function()
-			require("true-zen").setup({})
-		end,
-	},
-	"stevearc/dressing.nvim",
-	"mg979/vim-visual-multi",
 	"christoomey/vim-tmux-navigator",
-	{ "kyazdani42/nvim-web-devicons", commit = "313d9e7193354c5de7cdb1724f9e2d3f442780b0" },
+	{ "kyazdani42/nvim-web-devicons" },
 	{
 		"goolord/alpha-nvim",
 		dependencies = { "kyazdani42/nvim-web-devicons" },
 		config = function()
 			require("alpha").setup(require("alpha.themes.startify").config)
 		end,
+	},
+	{
+		"chentoast/marks.nvim",
+		event = "VeryLazy",
+		opts = {
+			bookmark_0 = {
+				sign = "⚑",
+				annotate = true,
+			},
+		},
 	},
 }
